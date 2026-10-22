@@ -8,6 +8,7 @@ PROD is only deployed from GitHub Actions.
 """
 import argparse
 import hashlib
+import io
 import os
 import sys
 from pathlib import Path
@@ -29,6 +30,15 @@ def connect(env):
     return snowflake.connector.connect(**params)
 
 
+def run_file(conn, path):
+    """Run every statement in a .sql file, ignoring comments."""
+    from snowflake.connector.util_text import split_statements
+    cur = conn.cursor()
+    for statement, _ in split_statements(io.StringIO(Path(path).read_text(encoding='utf-8')), remove_comments=True):
+        if statement.strip().rstrip(';').strip():
+            cur.execute(statement)
+
+
 def migrate(conn):
     cur = conn.cursor()
     cur.execute('CREATE SCHEMA IF NOT EXISTS CONTROL')
@@ -48,7 +58,7 @@ def migrate(conn):
         cur.execute('DELETE FROM CONTROL.MIGRATION_HISTORY WHERE VERSION = %s', (path.name,))
         cur.execute("INSERT INTO CONTROL.MIGRATION_HISTORY VALUES (%s, %s, 'STARTED', CURRENT_TIMESTAMP(), CURRENT_USER())",
                     (path.name, checksum))
-        conn.execute_string(path.read_text(encoding='utf-8'))
+        run_file(conn, path)
         cur.execute("UPDATE CONTROL.MIGRATION_HISTORY SET STATUS = 'SUCCESS', APPLIED_AT = CURRENT_TIMESTAMP() "
                     'WHERE VERSION = %s', (path.name,))
 
@@ -64,6 +74,15 @@ def load(conn):
     print('  loaded ', sum(row[3] for row in result), 'rows into CLINICAL.PATIENTS')
 
 
+def quality_gate(conn):
+    """Fail the deployment (and so block PROD) if any data quality rule fails."""
+    rows = conn.cursor().execute('SELECT CHECK_NAME, FAILED_ROWS, STATUS FROM MONITORING.DATA_QUALITY_CHECKS').fetchall()
+    for name, failed, status in rows:
+        print(f'  {status}    {name} ({failed} failing)')
+    if any(status == 'FAIL' for _, _, status in rows):
+        raise SystemExit('Data quality gate failed')
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', choices=['dev', 'prod'], default='dev')
@@ -77,6 +96,7 @@ def main():
         migrate(conn)
         if args.load_data:
             load(conn)
+        quality_gate(conn)
     finally:
         conn.close()
     print('Done')

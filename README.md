@@ -4,7 +4,7 @@ One deterministic hospital dataset feeds Bronze, version-aware Silver, dbt histo
 
 Native row streaming is now implemented with Snowpipe Streaming named channels. See [native streaming setup and demonstration](docs/PHASE7/native_streaming.md). Python sends events directly to the existing Bronze table; a Snowflake Stream/Task maintains Silver; an optional DEV dbt refresh loop updates Gold. The older staged micro-batch producer remains a separate batch teaching option.
 
-**Short standalone demo:** [governance_demo/](governance_demo/README.md) covers data governance, CI/CD and sensitive-data protection on one patients table.
+**Short standalone demo:** [governance_demo/](governance_demo/README.md) covers data governance, privacy, CI/CD and monitoring on one patients table.
 
 Start with [setup](docs/SETUP.md), [dataset scenarios](docs/DATA_SCENARIOS.md), [acceptance traceability](docs/traceability.csv) and [validation status](docs/VALIDATION.md). All eight supplied references are retained in references/. The deliverable PDFs are authoritative when the interactive guides differ.
 

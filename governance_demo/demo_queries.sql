@@ -67,6 +67,28 @@ CALL SYSTEM$CLASSIFY('GOV_DEMO_DEV.CLINICAL.PATIENTS', NULL);
 ------------------------------------------------------------------------------------------
 -- PART 3: CI/CD. What the pipeline deployed, when, and by whom.
 ------------------------------------------------------------------------------------------
+USE ROLE GOV_ADMIN;
+SELECT * FROM GOV_DEMO_DEV.MONITORING.DEPLOYMENTS ORDER BY VERSION;
+SELECT * FROM GOV_DEMO_PROD.MONITORING.DEPLOYMENTS ORDER BY VERSION;
+
+------------------------------------------------------------------------------------------
+-- PART 4: MONITORING. Data quality, who touched PII, and an alert.
+------------------------------------------------------------------------------------------
+USE ROLE GOV_ADMIN;
+SELECT * FROM MONITORING.DATA_QUALITY_CHECKS;                 -- all PASS
+SELECT * FROM MONITORING.PII_ACCESS_LOG ORDER BY QUERY_START_TIME DESC LIMIT 20;  -- appears after ~1-3 h
+
+-- Break the data on purpose, then let the alert catch it
 USE ROLE GOV_DEPLOYER;
-SELECT * FROM GOV_DEMO_DEV.CONTROL.MIGRATION_HISTORY ORDER BY VERSION;
-SELECT * FROM GOV_DEMO_PROD.CONTROL.MIGRATION_HISTORY ORDER BY VERSION;
+INSERT INTO CLINICAL.PATIENTS (PATIENT_ID, BRANCH, BILL_AMOUNT) VALUES (1, 'Mumbai', -500);
+SELECT * FROM MONITORING.DATA_QUALITY_CHECKS;                 -- three rules FAIL
+EXECUTE ALERT MONITORING.DATA_QUALITY_ALERT;                  -- wait a few seconds
+SELECT * FROM MONITORING.ALERT_LOG ORDER BY ALERT_TIME DESC;   -- failures logged
+
+-- Clean up
+DELETE FROM CLINICAL.PATIENTS WHERE BRANCH = 'Mumbai';
+TRUNCATE TABLE MONITORING.ALERT_LOG;
+
+-- To run the alert every hour for real (uses warehouse credits):
+-- ALTER ALERT MONITORING.DATA_QUALITY_ALERT RESUME;
+SHOW ALERTS IN SCHEMA MONITORING;

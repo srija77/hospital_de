@@ -1,0 +1,104 @@
+{
+  "phases": {
+    "7": {
+      "report": "phase7_report.pdf",
+      "code": "phase7_code.zip",
+      "sections": [
+        "Cover",
+        "Contribution (signed)",
+        "Streaming design",
+        "Architecture diagram",
+        "Late-data rules",
+        "24-hour metrics",
+        "Reconciliation",
+        "Run evidence",
+        "Operations notes"
+      ],
+      "evidence_items": [
+        "contribution_statement",
+        "streaming_design_doc",
+        "stream_architecture_diagram.png",
+        "late_data_rules_table",
+        "stream_metrics_report",
+        "reconciliation_report",
+        "run_evidence_screenshots",
+        "ops_notes"
+      ]
+    },
+    "8": {
+      "report": "phase8_report.pdf",
+      "code": "phase8_code.zip",
+      "sections": [
+        "Cover",
+        "Contribution (signed)",
+        "dbt design",
+        "Lineage graph",
+        "Test catalog",
+        "SCD2 evidence",
+        "Contract failure and correction",
+        "dbt test results",
+        "Phase 5 reconciliation"
+      ],
+      "evidence_items": [
+        "contribution_statement",
+        "dbt_design_doc",
+        "lineage_graph.png",
+        "test_catalog",
+        "scd2_evidence",
+        "contract_failure_demo",
+        "dbt_test_results",
+        "phase5_reconciliation"
+      ]
+    },
+    "9": {
+      "report": "phase9_report.pdf",
+      "code": "phase9_code.zip",
+      "sections": [
+        "Cover",
+        "Contribution (signed)",
+        "Observability design",
+        "Lineage documentation",
+        "Dashboard screenshots",
+        "Alerting plan and test evidence",
+        "Baseline benchmark",
+        "Optimization log",
+        "Before and after report"
+      ],
+      "evidence_items": [
+        "contribution_statement",
+        "observability_design_doc",
+        "lineage_documentation",
+        "dashboard_screenshots",
+        "alerting_plan",
+        "baseline_benchmark",
+        "optimization_log",
+        "before_after_report"
+      ]
+    },
+    "10": {
+      "report": "phase10_report.pdf",
+      "code": "phase10_code.zip",
+      "sections": [
+        "Cover",
+        "Contribution (signed)",
+        "Security design",
+        "Role hierarchy diagram",
+        "PII masking evidence",
+        "CI/CD evidence",
+        "Architecture diagram",
+        "Operations runbook",
+        "Capstone demo slides"
+      ],
+      "evidence_items": [
+        "contribution_statement",
+        "security_design_doc",
+        "role_hierarchy_diagram.png",
+        "pii_masking_evidence",
+        "cicd_evidence",
+        "architecture_diagram.png",
+        "operations_runbook",
+        "capstone_demo_slides"
+      ]
+    }
+  }
+}

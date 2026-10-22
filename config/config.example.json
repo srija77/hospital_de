@@ -1,0 +1,6 @@
+{
+  "dev": {"database":"HOSPITAL_DEV","role":"DE_ENGINEER","warehouse":"HOSPITAL_DEV_WH"},
+  "prod": {"database":"HOSPITAL_PROD","role":"DE_DEPLOYER","warehouse":"HOSPITAL_PROD_WH"},
+  "authentication":"SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PRIVATE_KEY_PATH",
+  "production_identity":"Separate service user; key stored in protected GitHub Environment secret"
+}

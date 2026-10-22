@@ -1,0 +1,182 @@
+[
+  {
+    "experiment": "rewrite",
+    "workload": "department",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "rewrite",
+    "workload": "department",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "rewrite",
+    "workload": "billing",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "rewrite",
+    "workload": "billing",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "rewrite",
+    "workload": "patient_join",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "rewrite",
+    "workload": "patient_join",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "warehouse",
+    "workload": "department",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "warehouse",
+    "workload": "department",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "warehouse",
+    "workload": "billing",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "warehouse",
+    "workload": "billing",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "warehouse",
+    "workload": "patient_join",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "warehouse",
+    "workload": "patient_join",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "layout",
+    "workload": "department",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "layout",
+    "workload": "department",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "layout",
+    "workload": "billing",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "layout",
+    "workload": "billing",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "layout",
+    "workload": "patient_join",
+    "variant": "before",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 10,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  },
+  {
+    "experiment": "layout",
+    "workload": "patient_join",
+    "variant": "after",
+    "evidence": "SYNTHETIC_EXAMPLE",
+    "query_id": null,
+    "elapsed_seconds": 8,
+    "credits_used": null,
+    "cache_state": "ILLUSTRATIVE_ONLY"
+  }
+]

@@ -1,0 +1,23 @@
+hospital:
+  target: "{{ env_var('DBT_TARGET', 'dev') }}"
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', 'offline') }}"
+      user: "{{ env_var('SNOWFLAKE_USER', 'offline') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH', '/tmp/offline.p8') }}"
+      role: DE_ENGINEER
+      database: HOSPITAL_DEV
+      warehouse: HOSPITAL_DEV_WH
+      schema: STAGING
+      threads: 2
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', 'offline') }}"
+      user: "{{ env_var('SNOWFLAKE_USER', 'offline') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH', '/tmp/offline.p8') }}"
+      role: DE_DEPLOYER
+      database: HOSPITAL_PROD
+      warehouse: HOSPITAL_PROD_WH
+      schema: STAGING
+      threads: 2

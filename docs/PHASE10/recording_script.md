@@ -1,0 +1,23 @@
+# Phase 10 instructor recording, 45 minutes plus 15-minute capstone
+
+Prerequisites: native masking/tag entitlement; authorized admin bootstrap; protected repository and environments; separate DEV/PROD service keys; three distinct admin/analyst/engineer test users; completed initial protected deployment; Gold grants issued only after policies verified. Prepare patient 1, release v1, GitHub PR page and runbook. Retain actual screenshots, not this document as proof.
+
+00:00–05:00 show DEV and PROD using SHOW DATABASES and environment config. Explain ownership and separate service credentials without opening secret values. Open role_hierarchy.md and rendered diagram; point out inheritance direction and no engineer-to-deployer relationship.
+
+05:00–12:00 administrator session: USE SECONDARY ROLES NONE; USE ROLE DE_ADMIN; use HOSPITAL_PROD_WH and query patient 1 from GOLD.DIM_PATIENTS where is_current. Expected Patient 000001 / p1@example.invalid / 5550000001 / 1951-01-01. Capture admin_patient1.png. Separate analyst-user session, same query, expected MASKED / ***@*** / ********** / NULL; capture analyst_patient1.png. Same patient and underlying table must be visible in both screenshots.
+
+12:00–17:00 analyst zero-row UPDATE Gold, direct Bronze raw PII and Silver patient email reads must fail; ordinary engineer PROD UPDATE must fail. Run python -m hospital.security_check after setting SNOWFLAKE_ADMIN_USER/KEY_PATH, SNOWFLAKE_ANALYST_USER/KEY_PATH and SNOWFLAKE_ENGINEER_USER/KEY_PATH outside the repository. Expected live assertions pass and artifacts/security/assertions.json. Show recursive user/role/PUBLIC grant review. Do not use an admin user's ability to switch to analyst as the only proof.
+
+17:00–23:00 execute exact PR scenario in cicd_setup.md: create lab/approved-release-v2 branch, python -m hospital.release_change, git add/commit/push and gh pr create. Show V003 changes only release marker; tests and migration checks run. Expected local checks pass; live DEV dbt build/tests run when configured. Capture PR and green checks with commit SHA.
+
+23:00–30:00 obtain independent review, merge through protected main, show deploy validate -> DEV -> waiting production approval -> approved PROD. Only designated reviewer releases the job. Show service-role environment without secrets, V003 checksum/SUCCESS and release marker v2 through read-only query. Capture merge/deployment/PROD query screenshots. If job takes longer, pause the recording rather than bypass a gate. If no GitHub integration is configured, mark this section unverified.
+
+30:00–35:00 repeat analyst masks after deployment to prove policies survived incremental updates. Confirm no ordinary manual PROD write grants appeared. Open actual security assertion artifact and production_check output. Explain one-time authorized setup versus normal model promotion.
+
+35:00–40:00 open architecture SVG/PNG and operations_runbook.md. Walk controlled failure: failure dashboard -> query ID -> DEV fix -> reviewed forward migration -> verification. Explain secrets rotation and teammate runbook drill. No emergency manual PROD changes.
+
+40:00–45:00 cleanup: add reviewed V004 restoring v1 if desired; keep applied migrations append-only; delete unused local test keys according to organization policy, never shared cloud evidence. Revoke temporary DEV warehouse experiment grants. Record which approvals/settings were actually verified.
+
+45:00–60:00 present capstone_demo_script.md with a timer, covering business, architecture, working pipeline, alerts, security, CI/CD, actual performance/cost and lessons. Student exercise: onboard a new analyst with only approved Gold access, prove masking and denials; then propose a small migration and identify every promotion gate.
+
+Troubleshooting: policy unsupported -> account entitlement pending, do not replace with fake screenshots; analyst sees real values -> inspect CURRENT_ROLE/secondary roles/policy attachment and revoke access until fixed; analyst can read raw -> audit PUBLIC/inheritance/ownership; production denied for service -> check DE_DEPLOYER and protected environment secret, never grant admin to engineer; pending deployment -> wait for reviewer; migration checksum mismatch -> restore applied file and append corrective version; missing v2 -> inspect exact main SHA and V003 history. Screenshot assignments: DEV/PROD, role hierarchy and grants, two-role patient proof, denied access, PR/tests/merge/deployment, v2, final architecture and timed presentation. Exact submission phase10_report.pdf/phase10_code.zip, signed contributions and real evidence.

@@ -1,0 +1,9 @@
+version: 2
+sources:
+  - name: silver
+    database: "{{ target.database }}"
+    schema: SILVER
+    description: "Bronze JSON -> full-history validated version MERGE -> Silver; see ingestion SQL."
+    tables:
+      - name: admissions
+      - name: patient_versions

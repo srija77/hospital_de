@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+connections.toml
+*.pem
+*.p8
+data/
+artifacts/
+dbt/target/
+dbt/logs/
+.pytest_cache/
+.tools/
+dbt/profiles.yml
+.*-key.p8
+dbt/.user.yml
+references/

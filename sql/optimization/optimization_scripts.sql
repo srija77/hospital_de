@@ -1,0 +1,12 @@
+-- Order: baseline saved -> rewrite -> restore query -> warehouse -> restore warehouse -> layout.
+-- Query rewrite: exact before/after pairs in benchmark_queries.sql.
+-- Warehouse sizing is deliberately NOT executable here; runner requires --allow-paid.
+-- ALTER WAREHOUSE HOSPITAL_DEV_WH SET WAREHOUSE_SIZE=SMALL;
+-- Restore the captured original size in a finally block.
+-- Benchmark-only alternative physical layout after Query Profile review:
+-- CREATE TRANSIENT TABLE GOLD.BENCH_ADMISSIONS AS SELECT * FROM GOLD.FCT_ADMISSIONS ORDER BY ADMIT_DATE;
+-- Run same logical workload replacing only fact table, then DROP TABLE GOLD.BENCH_ADMISSIONS.
+-- Optional clustering (not automatic): evaluate SYSTEM$CLUSTERING_INFORMATION,
+-- ALTER TABLE GOLD.BENCH_ADMISSIONS CLUSTER BY (ADMIT_DATE);
+-- Capture automatic clustering credits separately; DROP CLUSTERING KEY does not undo physical layout.
+-- DROP TABLE is the rollback for the experiment copy; original Gold remains untouched.

@@ -1,0 +1,68 @@
+name: Governance demo
+on:
+  pull_request:
+    paths: ['governance_demo/**', '.github/workflows/governance-demo.yml']
+  push:
+    branches: [main]
+    paths: ['governance_demo/**', '.github/workflows/governance-demo.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: governance-demo
+  cancel-in-progress: false
+
+jobs:
+  # CI: runs on every pull request. No Snowflake access.
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python governance_demo/checks.py
+
+  # CD step 1: after merge to main, deploy to DEV automatically.
+  deploy-dev:
+    needs: checks
+    if: github.event_name != 'pull_request'
+    environment: dev
+    runs-on: ubuntu-latest
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PRIVATE_KEY_PATH: ${{ github.workspace }}/.sf_key.p8
+      SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install "snowflake-connector-python>=3.12,<5"
+      - run: printf '%s\n' "$SNOWFLAKE_PRIVATE_KEY" > "$SNOWFLAKE_PRIVATE_KEY_PATH" && chmod 600 "$SNOWFLAKE_PRIVATE_KEY_PATH"
+      - run: python governance_demo/deploy.py --env dev --load-data
+      - if: always()
+        run: rm -f "$SNOWFLAKE_PRIVATE_KEY_PATH"
+
+  # CD step 2: PROD waits for a reviewer to approve the 'production' environment.
+  deploy-prod:
+    needs: deploy-dev
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    runs-on: ubuntu-latest
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PRIVATE_KEY_PATH: ${{ github.workspace }}/.sf_key.p8
+      SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install "snowflake-connector-python>=3.12,<5"
+      - run: printf '%s\n' "$SNOWFLAKE_PRIVATE_KEY" > "$SNOWFLAKE_PRIVATE_KEY_PATH" && chmod 600 "$SNOWFLAKE_PRIVATE_KEY_PATH"
+      - run: python governance_demo/deploy.py --env prod --load-data
+      - if: always()
+        run: rm -f "$SNOWFLAKE_PRIVATE_KEY_PATH"

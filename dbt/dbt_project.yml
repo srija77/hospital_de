@@ -1,0 +1,19 @@
+name: hospital
+version: '1.0'
+config-version: 2
+profile: hospital
+model-paths: [models]
+snapshot-paths: [snapshots]
+test-paths: [tests]
+macro-paths: [macros]
+models:
+  hospital:
+    +copy_grants: true
+    staging:
+      +materialized: view
+      +schema: STAGING
+    intermediate:
+      +materialized: view
+      +schema: INTERMEDIATE
+    marts:
+      +schema: GOLD

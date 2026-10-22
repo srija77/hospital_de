@@ -1,0 +1,49 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  local:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+      - run: python -m hospital.validate
+      - run: cp dbt/profiles.example.yml dbt/profiles.yml
+      - run: dbt parse --project-dir dbt --profiles-dir dbt --target dev --no-partial-parse
+  live-dev:
+    if: vars.ENABLE_SNOWFLAKE_TESTS == 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    needs: local
+    environment: dev-ci
+    concurrency: hospital-dev
+    runs-on: ubuntu-latest
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PRIVATE_KEY_PATH: ${{ github.workspace }}/.ci-key.p8
+      PRIVATE_KEY_CONTENT: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+      RUN_SNOWFLAKE_TESTS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Write key without logging
+        run: python -c "import os,pathlib; p=pathlib.Path(os.environ['SNOWFLAKE_PRIVATE_KEY_PATH']); p.write_text(os.environ['PRIVATE_KEY_CONTENT']); p.chmod(0o600)"
+      - run: cp dbt/profiles.example.yml dbt/profiles.yml
+      - run: python -m hospital.live migrate
+      - run: python -m hospital.core generate
+      - run: python -m hospital.live load
+      - run: python -m hospital.dbt_run build
+      - run: python -m unittest discover -s tests/integration -v
+      - if: always()
+        run: python -c "import os,pathlib; pathlib.Path(os.environ['SNOWFLAKE_PRIVATE_KEY_PATH']).unlink(missing_ok=True)"

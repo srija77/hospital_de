@@ -1,0 +1,14 @@
+{
+  "phase": 9,
+  "contribution_signed": false,
+  "items": {
+    "contribution_statement": "evidence/REPLACE_WITH_ACTUAL_contribution_statement.pdf",
+    "observability_design_doc": "evidence/REPLACE_WITH_ACTUAL_observability_design_doc.pdf",
+    "lineage_documentation": "evidence/REPLACE_WITH_ACTUAL_lineage_documentation.pdf",
+    "dashboard_screenshots": "evidence/REPLACE_WITH_ACTUAL_dashboard_screenshots.pdf",
+    "alerting_plan": "evidence/REPLACE_WITH_ACTUAL_alerting_plan.pdf",
+    "baseline_benchmark": "evidence/REPLACE_WITH_ACTUAL_baseline_benchmark.pdf",
+    "optimization_log": "evidence/REPLACE_WITH_ACTUAL_optimization_log.pdf",
+    "before_after_report": "evidence/REPLACE_WITH_ACTUAL_before_after_report.pdf"
+  }
+}

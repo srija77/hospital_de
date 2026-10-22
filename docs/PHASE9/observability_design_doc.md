@@ -1,0 +1,19 @@
+# Observability design
+
+The business question is whether today's admissions briefing is complete, timely and economical. All four dashboard sections observe the existing hospital pipeline; they do not introduce a second analytics dataset.
+
+Native ingestion now uses hospital.streaming (SDK offsets/commits) and native_streaming_setup/task.sql. For native lineage bridge retained source hash -> named channel/pipe -> Bronze -> CDC cursor/task/procedure -> Silver, then the same dbt graph. Native Silver success/failure records and actual freshness are captured by its transaction; task history and commits.jsonl complement the four dashboard sections. Stop producer, native task and optional dbt refresh loop before frozen performance experiments.
+
+Lineage uses the dbt manifest/docs graph for Silver -> staging -> intermediate -> both Gold models. For each Gold table retain one real graph screenshot and explain each hop. Source manifests, immutable stage paths and actual COPY/MERGE query IDs document the source -> Bronze -> Silver boundary. Snowflake OBJECT_DEPENDENCIES may expose view dependencies but is incomplete for procedural writes/CTAS/MERGE and can lag. Do not claim complete native lineage from that view alone. ACCESS_HISTORY is optional when account edition and privileges permit.
+
+Metrics: freshness uses last successful completion for Bronze events, Silver admissions and Gold fact; row counts distinguish physical event grain from deduplicated admission state; failures identify a UUID run and error class; durations compare a run to the previous successful run of the same pipeline/model. dbt_run records actual subprocess start/end; live load records actual load/MERGE execution start/end. Synthetic seeded logs are visibly named and excluded from actual latest-success calculations.
+
+Thresholds: stale when elapsed seconds exceeds expected_interval_minutes*60 (default 60); missing last success is stale. Pipeline failure threshold is one FAILED run in the last 24 hours. Duration percentage is descriptive, not an automatic SLA alert. Zero/missing previous duration produces NULL percentage. Gold freshness advances only after successful dbt build/tests.
+
+Routing: Snowflake alert actions call DETECT_ALERTS to MERGE durable alert events, with affected object, timestamp, message, recommendation and intended instructor/on-call recipient. ALERT_EVENTS is the supported default notification channel for the teaching account. Scheduled alerts remain suspended until authorized. External email requires verified recipients, an administrator-created integration and separate delivery evidence.
+
+Storage: MONITORING.PIPELINE_RUN_LOG, DATA_FRESHNESS, DATA_QUALITY_RESULTS, BENCHMARK_METADATA and ALERT_EVENTS; original generated metadata also lands unmodified in Bronze. Seed scenarios intentionally use relative live times and clearly synthetic object names. Actual load telemetry is never represented as synthetic measurement.
+
+Reliability: idempotent alert keys identify failed runs or stale load intervals. Recovery advances last_successful_load, eliminating the stale condition while retaining incident history. Failure rows remain within the detection window after recovery as historical incidents; downstream incident acknowledgement is a manual teaching step. Alert retention/deduplication is not an enterprise paging system.
+
+Performance: compare three logical workloads with disabled result cache, warm-up on each variant and three measured repeats. Record warehouse cache as uncontrolled, warehouse size, query IDs/text, scan bytes and actual credit attribution if available. No measured claim or 30% success can be made before real execution. All three workloads are measured to rank the slowest within this capstone; inspect broader account history separately if existing workloads are present.
